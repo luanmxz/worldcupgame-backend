@@ -28,12 +28,12 @@ public class RefreshTokenService {
 	private int expirationTime;
 	
 	  public String createToken(Usuario usuario) {
-	        var refreshToken = refreshTokenRepository.save(RefreshToken.builder())
+	        var refreshToken = refreshTokenRepository.save(RefreshToken.builder()
 	                .token(UUID.randomUUID().toString())
-	                .user(usuario)
-	                .expiration(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(expiration))
+	                .usuario(usuario)
+	                .expiration(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(expirationTime))
 	                .build());
-	        return refreshToken.
+	        return refreshToken.getToken();
 	    }
 
 	    public ResponseDTO refreshToken(RefreshRequestDTO refreshRequestDTO) {
@@ -46,13 +46,13 @@ public class RefreshTokenService {
 	            refreshTokenRepository.delete(token);
 	            throw new RuntimeException("Refresh Token %s was expired!".formatted(refreshRequestDTO.getRefreshToken()));
 	        }
-	        String jwt = jwtUtils.createJwt(token.getUser().getEmail());
+	        String jwt = jwtUtils.createJwt(token.getUsuario().getEmail());
 	        updateToken(token);
-	        return JwtResponseDto.of(jwt, token.getToken());
+	        return ResponseDTO.of(jwt, token.getToken());
 	    }
 
 	    private void updateToken(RefreshToken token) {
-	        token.setExpiration(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(expiration));
+	        token.setExpiration(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(expirationTime));
 	        refreshTokenRepository.save(token);
 	    }
 

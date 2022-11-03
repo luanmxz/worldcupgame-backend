@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.worldcupgame.dto.ResponseDTO;
 import br.com.worldcupgame.services.UsuarioService;
 
 @Component
@@ -24,8 +25,11 @@ public class AuthSucessHandler extends SimpleUrlAuthenticationSuccessHandler{
 	@Autowired
 	UsuarioService usuarioService;
 	
-	private final JwtUtils jwtUtils;
-	private final RefreshTokenService refreshTokenService;
+	@Autowired
+	JwtUtils jwtUtils;
+	
+	@Autowired
+	RefreshTokenService refreshTokenService;
 	
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -36,6 +40,6 @@ public class AuthSucessHandler extends SimpleUrlAuthenticationSuccessHandler{
         String refreshToken = refreshTokenService.createToken(usuario);
         response.addHeader("Authorization", "Bearer " + token);
         response.addHeader("Content-Type", "application/json");
-        response.getWriter().write(objectMapper.writeValueAsString(ResponseDto.of(token, refreshToken)));
+        response.getWriter().write(objectMapper.writeValueAsString(ResponseDTO.of(token, refreshToken)));
     }
 }
