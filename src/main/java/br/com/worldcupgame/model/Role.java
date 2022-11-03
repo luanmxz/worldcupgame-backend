@@ -35,11 +35,11 @@ public class Role implements GrantedAuthority {
 		this.id = id;
 	}
 
-	public RoleEnum getTipoRole() {
+	public RoleEnum getRoleName() {
 		return roleName;
 	}
 
-	public void setTipoRole(RoleEnum roleName) {
+	public void setRoleName(RoleEnum roleName) {
 		this.roleName = roleName;
 	}
 
