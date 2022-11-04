@@ -4,7 +4,7 @@ import br.com.worldcupgame.model.Usuario;
 
 public class UsuarioDTO {
 
-	private Integer id;
+	private Long id;
 	private String nome;
 	private Integer pontos;
 	
@@ -16,10 +16,10 @@ public class UsuarioDTO {
 		this.pontos = usuario.getPontos();
 	}
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNome() {

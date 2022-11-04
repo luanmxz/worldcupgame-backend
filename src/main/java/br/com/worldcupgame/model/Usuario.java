@@ -1,21 +1,18 @@
 package br.com.worldcupgame.model;
 
-import lombok.*;
-
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -23,12 +20,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@EqualsAndHashCode(of = "uuid")
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_user")
 public class Usuario implements UserDetails {
@@ -37,65 +28,77 @@ public class Usuario implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name= "id_user")
-	private Integer id;
+	@Column(name= "user_id")
+	private Long id;
 	
-	@Column(name = "nome")
-	private String username;
+	private String nome;
 	private String email;
-	@Column(name = "senha")
-	private String password;
-	private LocalDateTime criadoEm = LocalDateTime.now();
-	private LocalDateTime atualizadoEm = LocalDateTime.now();
+	private String senha;
+	
 	private Integer pontos = 0;
 	
-	@Column
-	@Enumerated(EnumType.STRING)
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_usuario_role",
+			joinColumns = @JoinColumn(name ="user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
-
 	
-	public Integer getId() {
+	public Usuario() {}
+	
+	public Usuario(Long id, String nome, String email, String senha) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles
+				.stream()
+				.map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+				.collect(Collectors.toList());
+	}
+
+	public Long getId() {
 		return id;
 	}
-	
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public LocalDateTime getCriadoEm() {
-		return criadoEm;
-	}
-	public void setCriadoEm(LocalDateTime criadoEm) {
-		this.criadoEm = criadoEm;
-	}
-	
-	public LocalDateTime getAtualizadoEm() {
-		return atualizadoEm;
-	}
-	public void setAtualizadoEm(LocalDateTime atualizadoEm) {
-		this.atualizadoEm = atualizadoEm;
-	}
-	
-	@Override
-	public String getUsername() {
-		return username;
+
+	public String getSenha() {
+		return senha;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
-	@Override
-	public String getPassword() {
-		return password;
+	public Integer getPontos() {
+		return pontos;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPontos(Integer pontos) {
+		this.pontos = pontos;
 	}
 
 	public Set<Role> getRoles() {
@@ -106,45 +109,41 @@ public class Usuario implements UserDetails {
 		this.roles = roles;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Integer getPontos() {
-		return pontos;
-	}
-	public void setPontos(Integer pontos) {
-		this.pontos = pontos;
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		for (var r: this.roles) {
-			var sga = new SimpleGrantedAuthority(r.toString());
-			authorities.add(sga);
-		}
-		return this.roles;
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+	
 }
