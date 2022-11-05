@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.worldcupgame.dto.UserDTO;
-import br.com.worldcupgame.dto.UserInsertDTO;
-import br.com.worldcupgame.dto.UserUpdateDTO;
+import br.com.worldcupgame.dto.UsuarioDTO;
+import br.com.worldcupgame.dto.NovoUsuarioDTO;
+import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
 import br.com.worldcupgame.services.UsuarioService;
 
 @RestController
@@ -30,20 +30,20 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@GetMapping
-	public ResponseEntity<List<UserDTO>> findAll() {
-		List<UserDTO> list = usuarioService.findAll();
+	public ResponseEntity<List<UsuarioDTO>> findAll() {
+		List<UsuarioDTO> list = usuarioService.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
-		UserDTO dto = usuarioService.findById(id);
+	public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
+		UsuarioDTO dto = usuarioService.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto) {
-		UserDTO NewDto = usuarioService.insert(dto);
+	public ResponseEntity<UsuarioDTO> insert(@Valid @RequestBody NovoUsuarioDTO dto) {
+		UsuarioDTO NewDto = usuarioService.insert(dto);
 		URI uri = ServletUriComponentsBuilder
 					.fromCurrentRequest()
 					.path("/{id}")
@@ -53,8 +53,8 @@ public class UsuarioController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
-		UserDTO newDto = usuarioService.update(id, dto);
+	public ResponseEntity<UsuarioDTO> update(@PathVariable Long id, @Valid @RequestBody AtualizaUsuarioDTO dto) {
+		UsuarioDTO newDto = usuarioService.update(id, dto);
 		return ResponseEntity.ok().body(newDto);
 	}
 	

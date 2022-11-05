@@ -1,6 +1,6 @@
 package br.com.worldcupgame.dto;
 
-public class UserUpdateDTO extends UserDTO{
+public class AtualizaUsuarioDTO extends UsuarioDTO{
 	private static final long serialVersionUID = 1L;
 
 }

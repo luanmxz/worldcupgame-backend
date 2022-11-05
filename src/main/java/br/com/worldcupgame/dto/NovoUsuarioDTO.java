@@ -1,12 +1,12 @@
 package br.com.worldcupgame.dto;
 
-public class UserInsertDTO extends UserDTO{
+public class NovoUsuarioDTO extends UsuarioDTO{
 	private static final long serialVersionUID = 1L;
 	
 	private String senha;
 	
 	
-	UserInsertDTO() {
+	NovoUsuarioDTO() {
 		super();
 	}
 

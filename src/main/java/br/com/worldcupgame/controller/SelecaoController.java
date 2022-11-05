@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ import br.com.worldcupgame.repository.SelecaoRepository;
 import br.com.worldcupgame.services.SelecaoService;
 
 @RestController
-@RequestMapping(path = "/api/selecoes")
+@RequestMapping(path = "/selecoes")
 public class SelecaoController {
 
 	@Autowired
@@ -54,7 +55,7 @@ public class SelecaoController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@PostMapping(path = "/save")
+	@PostMapping(path = "")
 	@Transactional
 	@ResponseStatus(HttpStatus.CREATED)
 	public Selecao save(@RequestBody Selecao selecao){
@@ -68,6 +69,15 @@ public class SelecaoController {
 		if (selecao.isPresent()) {
 			selecaoRepository.deleteById(id);
 			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping(path= "/name")
+	public ResponseEntity<Selecao> findSelecaoByName(@RequestParam("nomeSelecao") String nomeSelecao) {
+		Optional<Selecao> selecao = selecaoRepository.findSelecaoByName(nomeSelecao);
+		if (selecao.isPresent()) {
+			return ResponseEntity.ok().body(selecao.get());
 		}
 		return ResponseEntity.notFound().build();
 	}

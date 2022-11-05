@@ -17,9 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.worldcupgame.dto.RoleDTO;
-import br.com.worldcupgame.dto.UserDTO;
-import br.com.worldcupgame.dto.UserInsertDTO;
-import br.com.worldcupgame.dto.UserUpdateDTO;
+import br.com.worldcupgame.dto.UsuarioDTO;
+import br.com.worldcupgame.dto.NovoUsuarioDTO;
+import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
 import br.com.worldcupgame.model.Role;
 import br.com.worldcupgame.model.Usuario;
 import br.com.worldcupgame.repository.RoleRepository;
@@ -39,34 +39,35 @@ public class UsuarioService implements UserDetailsService {
 	private RoleRepository roleRepository;
 	
 	@Transactional
-	public List<UserDTO> findAll() {
+	public List<UsuarioDTO> findAll() {
 		List<Usuario> list =  repository.findAll();
-		return list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+		return list.stream().map(x -> new UsuarioDTO(x)).collect(Collectors.toList());
 	}
 
 	@Transactional
-	public UserDTO findById(Long id) {
+	public UsuarioDTO findById(Long id) {
 		Optional<Usuario> obj = repository.findById(id);
 		Usuario entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
-		return new UserDTO(entity);
+		return new UsuarioDTO(entity);
 	}
 
 	@Transactional
-	public UserDTO insert(UserInsertDTO dto) {
+	public UsuarioDTO insert(NovoUsuarioDTO dto) {
 		Usuario entity = new Usuario();
-		copyDtoToEntity(dto, entity);
-		entity.setSenha(passwordEncoder.encode(dto.getSenha()));
+		convertDtoToEntity(dto, entity);
+		entity.setPassword(passwordEncoder.encode(dto.getSenha()));
 		entity = repository.save(entity);
-		return new UserDTO(entity);
+		return new UsuarioDTO(entity);
 	}
 	
 	@Transactional
-	public UserDTO update(Long id, UserUpdateDTO dto) {
+	public UsuarioDTO update(Long id, AtualizaUsuarioDTO dto) {
 		try {
+			@SuppressWarnings("deprecation")
 			Usuario entity = repository.getOne(id);
-			copyDtoToEntity(dto, entity);
+			convertDtoToEntity(dto, entity);
 			entity = repository.save(entity);
-			return new UserDTO(entity);
+			return new UsuarioDTO(entity);
 		} 
 		catch(EntityNotFoundException e) {
 			throw new EntityNotFoundException("Id not found" + id);
@@ -82,12 +83,13 @@ public class UsuarioService implements UserDetailsService {
 		}
 	}	
 	
-	public void copyDtoToEntity(UserDTO dto, Usuario entity) {
-		entity.setNome(dto.getNome());
+	public void convertDtoToEntity(UsuarioDTO dto, Usuario entity) {
+		entity.setUsername(dto.getNome());
 		entity.setEmail(dto.getEmail());
 		
 		entity.getRoles().clear();
 		for(RoleDTO roleDto : dto.getRoles()) {
+			@SuppressWarnings("deprecation")
 			Role role = roleRepository.getOne(roleDto.getId());
 			entity.getRoles().add(role);
 		}

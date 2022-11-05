@@ -31,10 +31,11 @@ public class Usuario implements UserDetails {
 	@Column(name= "user_id")
 	private Long id;
 	
+	@Column(unique = true)
 	private String nome;
+	@Column(unique = true)
 	private String email;
 	private String senha;
-	
 	private Integer pontos = 0;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -69,28 +70,12 @@ public class Usuario implements UserDetails {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
 	}
 
 	public Integer getPontos() {
@@ -111,38 +96,44 @@ public class Usuario implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.senha;
+	}
+	
+	public void setPassword(String password) {
+		this.senha = password;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nome;
+	}
+	
+	public void setUsername(String username) {
+		this.nome = username;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	

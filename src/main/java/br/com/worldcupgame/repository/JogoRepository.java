@@ -1,9 +1,9 @@
 package br.com.worldcupgame.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.worldcupgame.model.Jogo;
 
-public interface JogoRepository extends CrudRepository<Jogo, Integer> {
+public interface JogoRepository extends JpaRepository<Jogo, Integer> {
 
 }
