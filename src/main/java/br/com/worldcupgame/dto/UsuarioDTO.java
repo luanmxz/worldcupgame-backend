@@ -73,7 +73,5 @@ public class UsuarioDTO implements Serializable {
 
 	public void setPontos(Integer pontos) {
 		this.pontos = pontos;
-	}
-	
-	
+	}	
 }

@@ -33,7 +33,8 @@ public class Usuario implements UserDetails {
 	
 	@Column(unique = true)
 	private String nome;
-	@Column(unique = true)
+	
+	@Column(name= "email", unique = true)
 	private String email;
 	private String senha;
 	private Integer pontos = 0;

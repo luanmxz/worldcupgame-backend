@@ -2,6 +2,7 @@ package br.com.worldcupgame.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -17,17 +18,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.worldcupgame.dto.UsuarioDTO;
-import br.com.worldcupgame.dto.NovoUsuarioDTO;
 import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
+import br.com.worldcupgame.dto.NovaSenhaDTO;
+import br.com.worldcupgame.dto.NovoUsuarioDTO;
+import br.com.worldcupgame.dto.UsuarioDTO;
+import br.com.worldcupgame.model.RecoveryPasswordToken;
+import br.com.worldcupgame.model.Usuario;
+import br.com.worldcupgame.services.RecoveryPasswordTokenService;
 import br.com.worldcupgame.services.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
-
+	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private RecoveryPasswordTokenService recoveryPasswordTokenService;
 	
 	@GetMapping
 	public ResponseEntity<List<UsuarioDTO>> findAll() {
@@ -64,4 +72,14 @@ public class UsuarioController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PutMapping(value= "{id}/new-password")
+	public ResponseEntity<Usuario> changePassword(@RequestBody NovaSenhaDTO novaSenha, @PathVariable("id") Long id ){
+		Optional<RecoveryPasswordToken> tokenInDataBase = recoveryPasswordTokenService.verifyToken(novaSenha.getToken(), id);
+		if (tokenInDataBase.isPresent()) {
+			Usuario usuario = usuarioService.changePassword(novaSenha.getNovaSenha(), id);
+			recoveryPasswordTokenService.deleteToken(tokenInDataBase.get());
+			return ResponseEntity.ok().body(usuario);
+		}
+		return ResponseEntity.badRequest().build();
+	}
 }

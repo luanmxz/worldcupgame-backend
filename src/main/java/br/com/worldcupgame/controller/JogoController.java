@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.worldcupgame.dto.JogoDTO;
 import br.com.worldcupgame.dto.NovoJogoDTO;
 import br.com.worldcupgame.model.Jogo;
-import br.com.worldcupgame.model.Usuario;
 import br.com.worldcupgame.repository.JogoRepository;
 import br.com.worldcupgame.repository.SelecaoRepository;
 import br.com.worldcupgame.services.JogoService;
@@ -63,7 +62,7 @@ public class JogoController {
 	@PostMapping(path = "/save")
 	@Transactional
 	@ResponseStatus(HttpStatus.CREATED)
-	public Jogo save(Usuario usuario, @RequestBody NovoJogoDTO novoJogoDTO){
+	public Jogo save(@RequestBody NovoJogoDTO novoJogoDTO){
 		Jogo jogo = jogoService.formataJogo(novoJogoDTO, selecaoRepository);
 		return jogoRepository.save(jogo);
 	}

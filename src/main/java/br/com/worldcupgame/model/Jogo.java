@@ -32,11 +32,9 @@ public class Jogo {
 	private int id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	//@JoinColumn(name= "id_time_A", referencedColumnName= "id_selecao")
 	private Selecao idTimeA;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	//@JoinColumn(name= "id_time_B", referencedColumnName= "id_selecao")
 	private Selecao idTimeB;
 	
 	private Integer golsA;

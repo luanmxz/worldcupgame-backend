@@ -1,6 +1,5 @@
 package br.com.worldcupgame.services;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,10 +15,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
+import br.com.worldcupgame.dto.NovoUsuarioDTO;
 import br.com.worldcupgame.dto.RoleDTO;
 import br.com.worldcupgame.dto.UsuarioDTO;
-import br.com.worldcupgame.dto.NovoUsuarioDTO;
-import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
 import br.com.worldcupgame.model.Role;
 import br.com.worldcupgame.model.Usuario;
 import br.com.worldcupgame.repository.RoleRepository;
@@ -33,40 +32,37 @@ public class UsuarioService implements UserDetailsService {
 	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private UsuarioRepository repository;
+	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
 	private RoleRepository roleRepository;
 	
-	@Transactional
 	public List<UsuarioDTO> findAll() {
-		List<Usuario> list =  repository.findAll();
+		List<Usuario> list =  usuarioRepository.findAll();
 		return list.stream().map(x -> new UsuarioDTO(x)).collect(Collectors.toList());
 	}
 
-	@Transactional
 	public UsuarioDTO findById(Long id) {
-		Optional<Usuario> obj = repository.findById(id);
+		Optional<Usuario> obj = usuarioRepository.findById(id);
 		Usuario entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 		return new UsuarioDTO(entity);
 	}
 
-	@Transactional
 	public UsuarioDTO insert(NovoUsuarioDTO dto) {
 		Usuario entity = new Usuario();
 		convertDtoToEntity(dto, entity);
+		Role role = roleRepository.findById((long) 1).get(); 
+		entity.getRoles().add(role);
 		entity.setPassword(passwordEncoder.encode(dto.getSenha()));
-		entity = repository.save(entity);
+		entity = usuarioRepository.save(entity);
 		return new UsuarioDTO(entity);
 	}
 	
-	@Transactional
 	public UsuarioDTO update(Long id, AtualizaUsuarioDTO dto) {
 		try {
-			@SuppressWarnings("deprecation")
-			Usuario entity = repository.getOne(id);
+			Usuario entity = usuarioRepository.findById(id).get();
 			convertDtoToEntity(dto, entity);
-			entity = repository.save(entity);
+			entity = usuarioRepository.save(entity);
 			return new UsuarioDTO(entity);
 		} 
 		catch(EntityNotFoundException e) {
@@ -76,12 +72,12 @@ public class UsuarioService implements UserDetailsService {
 
 	public void delete(Long id) {
 		try {
-			repository.deleteById(id);
+			usuarioRepository.deleteById(id);
 		}
 		catch(EmptyResultDataAccessException e) {
 			throw new EntityNotFoundException("Id not found" + id);
 		}
-	}	
+	}
 	
 	public void convertDtoToEntity(UsuarioDTO dto, Usuario entity) {
 		entity.setUsername(dto.getNome());
@@ -89,8 +85,7 @@ public class UsuarioService implements UserDetailsService {
 		
 		entity.getRoles().clear();
 		for(RoleDTO roleDto : dto.getRoles()) {
-			@SuppressWarnings("deprecation")
-			Role role = roleRepository.getOne(roleDto.getId());
+			Role role = roleRepository.findById(roleDto.getId()).get();
 			entity.getRoles().add(role);
 		}
 	}
@@ -98,10 +93,18 @@ public class UsuarioService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		Usuario user = repository.findUserByEmail(username);
-		if (user == null) {
+		Optional<Usuario> user = usuarioRepository.findUserByEmail(username);
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException("Email not found");
 		}
-		return user;
+		return user.get();
 	}
+
+	public Usuario changePassword(String novaSenha, Long id) {
+		Usuario usuario = this.usuarioRepository.findById(id).get();
+		usuario.setPassword(passwordEncoder.encode(novaSenha));
+		usuarioRepository.save(usuario);
+		return usuario;
+	}
+
 }
