@@ -59,7 +59,7 @@ public class JogoController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@PostMapping(path = "/save")
+	@PostMapping(path = "")
 	@Transactional
 	@ResponseStatus(HttpStatus.CREATED)
 	public Jogo save(@RequestBody NovoJogoDTO novoJogoDTO){
