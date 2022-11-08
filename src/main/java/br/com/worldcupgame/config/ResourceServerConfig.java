@@ -25,6 +25,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 	public void configure(HttpSecurity http) throws Exception {
 		
 		http
+			.headers().frameOptions().disable().and()
+			.cors().and().csrf().disable()
 			.authorizeRequests()
 				.antMatchers("/oauth/token", "/sending-email", "/api/jogos/**", "/selecoes", "/recovery-password/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
