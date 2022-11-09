@@ -24,7 +24,7 @@ import br.com.worldcupgame.repository.SelecaoRepository;
 import br.com.worldcupgame.services.SelecaoService;
 
 @RestController
-@RequestMapping(path = "/selecoes")
+@RequestMapping(path = "/api/selecoes")
 public class SelecaoController {
 
 	@Autowired

@@ -51,7 +51,8 @@ public class Jogo {
 	@Enumerated(EnumType.STRING)
 	private ResultadosEnum resultado = ResultadosEnum.ND;
 	
-
+	public Jogo() {}
+	
 	public Jogo(NovoJogoDTO novoJogoDTO, LocalDateTime dataDoJogo, Selecao selecaoA, Selecao selecaoB) {
 		this.idTimeA = selecaoA;
 		this.idTimeB = selecaoB;
