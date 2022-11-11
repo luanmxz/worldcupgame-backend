@@ -23,9 +23,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
 import br.com.worldcupgame.dto.NovaSenhaDTO;
 import br.com.worldcupgame.dto.NovoUsuarioDTO;
+import br.com.worldcupgame.dto.RoleDTO;
 import br.com.worldcupgame.dto.UsuarioDTO;
+import br.com.worldcupgame.dto.UsuarioRankingDTO;
 import br.com.worldcupgame.model.RecoveryPasswordToken;
+import br.com.worldcupgame.model.Role;
 import br.com.worldcupgame.model.Usuario;
+import br.com.worldcupgame.repository.RoleRepository;
+import br.com.worldcupgame.repository.UsuarioRepository;
+import br.com.worldcupgame.services.LogService;
 import br.com.worldcupgame.services.RecoveryPasswordTokenService;
 import br.com.worldcupgame.services.UsuarioService;
 
@@ -37,7 +43,16 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@Autowired
+	private LogService logService;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
 	private RecoveryPasswordTokenService recoveryPasswordTokenService;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<UsuarioDTO>> findAll() {
@@ -49,6 +64,12 @@ public class UsuarioController {
 	public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
 		UsuarioDTO dto = usuarioService.findById(id);
 		return ResponseEntity.ok().body(dto);
+	}
+	
+	@GetMapping(value= "/ranking")
+	public ResponseEntity<List<UsuarioRankingDTO>> findAllForRanking() {
+		List<UsuarioRankingDTO> list = usuarioService.findAllForRanking();
+		return ResponseEntity.ok().body(list);
 	}
 	
 	@PostMapping(path= "")
@@ -84,5 +105,23 @@ public class UsuarioController {
 			return ResponseEntity.ok().body(usuario);
 		}
 		return ResponseEntity.badRequest().build();
+	}
+	
+	@PutMapping(value= "{userId}/set-new-role")
+	public ResponseEntity<Usuario> setNewRole(@PathVariable("userId") Long userId, @RequestBody RoleDTO roleDto){
+		Usuario usuario = usuarioRepository.findById(userId).get();
+		Role role = roleRepository.findById(roleDto.getId()).get();
+		usuario.getRoles().add(role);
+		usuarioRepository.save(usuario);
+		return ResponseEntity.ok().body(usuario);
+	}
+	
+	@PutMapping(value= "{userId}/remove-role")
+	public ResponseEntity<Usuario> removeRoleFromUser(@PathVariable("userId") Long userId, @RequestBody RoleDTO roleDto) {
+		Usuario usuario = usuarioRepository.findById(userId).get();
+		Role role = roleRepository.findById(roleDto.getId()).get();
+		usuario.getRoles().remove(role);
+		usuarioRepository.save(usuario);
+		return ResponseEntity.ok().body(usuario);
 	}
 }

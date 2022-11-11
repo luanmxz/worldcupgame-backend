@@ -54,7 +54,7 @@ public class GrupoController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@PostMapping(path = "/save")
+	@PostMapping(path = "")
 	@Transactional
 	@ResponseStatus(HttpStatus.CREATED)
 	public Grupo save(@RequestBody Grupo grupo) {

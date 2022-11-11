@@ -1,5 +1,7 @@
 package br.com.worldcupgame.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.com.worldcupgame.dto.ApostaDTO;
 import br.com.worldcupgame.enums.ResultadosEnum;
 
 @Entity
@@ -37,6 +45,27 @@ public class Aposta {
 	@JoinColumn(name= "id_jogo")
 	private Jogo idJogo;
 	
+	@DateTimeFormat(style= "dd-MM-yyyy HH:mm")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern= "dd-MM-yyyy HH:mm")
+	private LocalDateTime dataDaAposta = LocalDateTime.now();
+	
+
+	public Aposta() {}
+	
+	public Aposta(ApostaDTO apostaDTO, Usuario idUser, Jogo idJogo) {
+		this.apostouEm = apostaDTO.getApostouEm();
+		this.estaAtiva = apostaDTO.isEstaAtiva();
+		this.idUser = idUser;
+		this.idJogo = idJogo;
+	}
+	
+	public Aposta(ResultadosEnum apostouEm, boolean estaAtiva, Usuario idUser, Jogo idJogo) {
+		super();
+		this.apostouEm = apostouEm;
+		this.estaAtiva = true;
+		this.idUser = idUser;
+		this.idJogo = idJogo;
+	}
 
 	public int getId() {
 		return id;

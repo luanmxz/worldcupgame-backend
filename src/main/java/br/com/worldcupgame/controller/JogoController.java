@@ -1,5 +1,6 @@
 package br.com.worldcupgame.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -42,6 +43,11 @@ public class JogoController {
 		return jogoRepository.findById(id)
 				.map(jogo -> ResponseEntity.ok().body(jogo))
 				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping(path= "/group/{groupId}")
+	public List<Jogo> findByGroupId(@PathVariable("groupId") Integer groupId){
+		return jogoRepository.findJogoByGroup(groupId);
 	}
 	
 	@GetMapping(path = "")

@@ -7,8 +7,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import br.com.worldcupgame.enums.GruposEnum;
@@ -24,10 +22,6 @@ public class Grupo {
 	@Column(name= "nome_grupo")
 	@Enumerated(EnumType.STRING)
 	private GruposEnum nomeGrupo;
-	
-	@ManyToOne
-	@JoinColumn(name= "id_selecao", unique = true)
-	private Selecao idSelecao;
 
 	public Integer getId() {
 		return id;
@@ -44,16 +38,5 @@ public class Grupo {
 	public void setNomeGrupo(GruposEnum nomeGrupo) {
 		this.nomeGrupo = nomeGrupo;
 	}
-
-	public Selecao getIdSelecao() {
-		return idSelecao;
-	}
-
-	public void setIdSelecao(Selecao idSelecao) {
-		this.idSelecao = idSelecao;
-	}
-
-	
-	
 	
 }

@@ -58,8 +58,9 @@ public class SelecaoController {
 	@PostMapping(path = "")
 	@Transactional
 	@ResponseStatus(HttpStatus.CREATED)
-	public Selecao save(@RequestBody Selecao selecao){
-		return selecaoRepository.save(selecao);
+	public Selecao save(@RequestBody SelecaoDTO selecaoDto){
+		Selecao newSelecao = selecaoService.convertDtoToEntity(selecaoDto);
+		return selecaoRepository.save(newSelecao);
 	}
 	
 	@DeleteMapping(path= "/{id}")

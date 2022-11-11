@@ -19,6 +19,7 @@ import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
 import br.com.worldcupgame.dto.NovoUsuarioDTO;
 import br.com.worldcupgame.dto.RoleDTO;
 import br.com.worldcupgame.dto.UsuarioDTO;
+import br.com.worldcupgame.dto.UsuarioRankingDTO;
 import br.com.worldcupgame.model.Role;
 import br.com.worldcupgame.model.Usuario;
 import br.com.worldcupgame.repository.RoleRepository;
@@ -27,6 +28,9 @@ import br.com.worldcupgame.repository.UsuarioRepository;
 @Service
 @Transactional
 public class UsuarioService implements UserDetailsService {
+	
+	@Autowired
+	private LogService logService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -40,6 +44,11 @@ public class UsuarioService implements UserDetailsService {
 	public List<UsuarioDTO> findAll() {
 		List<Usuario> list =  usuarioRepository.findAll();
 		return list.stream().map(x -> new UsuarioDTO(x)).collect(Collectors.toList());
+	}
+	
+	public List<UsuarioRankingDTO> findAllForRanking() {
+		List<Usuario> list =  usuarioRepository.findAll();
+		return list.stream().map(x -> new UsuarioRankingDTO(x.getUsername(), x.getPontos())).collect(Collectors.toList());
 	}
 
 	public UsuarioDTO findById(Long id) {
@@ -55,6 +64,8 @@ public class UsuarioService implements UserDetailsService {
 		entity.getRoles().add(role);
 		entity.setPassword(passwordEncoder.encode(dto.getSenha()));
 		entity = usuarioRepository.save(entity);
+		String action = "Usuario com o ID: " + entity.getId() + " criado.";
+		logService.formataLog(action, entity);
 		return new UsuarioDTO(entity);
 	}
 	
@@ -63,6 +74,8 @@ public class UsuarioService implements UserDetailsService {
 			Usuario entity = usuarioRepository.findById(id).get();
 			convertDtoToEntity(dto, entity);
 			entity = usuarioRepository.save(entity);
+			String action = "Atualizou as informações.";
+			logService.formataLog(action, entity);
 			return new UsuarioDTO(entity);
 		} 
 		catch(EntityNotFoundException e) {
@@ -72,6 +85,10 @@ public class UsuarioService implements UserDetailsService {
 
 	public void delete(Long id) {
 		try {
+			
+			Usuario usuario = usuarioRepository.findById(id).get();
+			String action = "Usuario de ID: " + usuario.getId() + " deletou a conta";
+			logService.formataLog(action, usuario);
 			usuarioRepository.deleteById(id);
 		}
 		catch(EmptyResultDataAccessException e) {
@@ -104,6 +121,8 @@ public class UsuarioService implements UserDetailsService {
 		Usuario usuario = this.usuarioRepository.findById(id).get();
 		usuario.setPassword(passwordEncoder.encode(novaSenha));
 		usuarioRepository.save(usuario);
+		String action = "Usuario de ID: " + usuario.getId() + " alterou a senha";
+		logService.formataLog(action, usuario);
 		return usuario;
 	}
 

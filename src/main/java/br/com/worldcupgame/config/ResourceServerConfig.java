@@ -68,6 +68,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 				.antMatchers(HttpMethod.PUT, "/api/jogos/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/jogos/**").hasRole("ADMIN")
 				//oauth/token
+				//api/logs
+				.antMatchers("/api/logs/**").hasRole("ADMIN")
 				.anyRequest().permitAll();
 	}
 	

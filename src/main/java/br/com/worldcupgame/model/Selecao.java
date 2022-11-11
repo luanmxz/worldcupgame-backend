@@ -2,10 +2,14 @@ package br.com.worldcupgame.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import br.com.worldcupgame.dto.SelecaoDTO;
 
 @Entity
 @Table(name= "tb_selecao")
@@ -19,6 +23,10 @@ public class Selecao {
 	@Column(name= "nome_selecao")
 	private String nomeSelecao;
 	
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Grupo grupo;
+	
 	private Integer pontos;
 	private Integer vitorias;
 	private Integer derrotas;
@@ -26,10 +34,18 @@ public class Selecao {
 	private Integer jogos;
 	private Integer gols;
 	
-	@Column(name= "esta_eliminada")
-	private boolean estaEliminada = false;
 	
 	public Selecao() {}
+	
+	public Selecao(SelecaoDTO selecaoDto) {
+		this.nomeSelecao = selecaoDto.getNomeSelecao();
+		this.pontos = selecaoDto.getPontos();
+		this.vitorias = selecaoDto.getVitorias();
+		this.derrotas = selecaoDto.getDerrotas();
+		this.empates = selecaoDto.getEmpates();
+		this.jogos = selecaoDto.getJogos();
+		this.gols = selecaoDto.getGols();
+	}
 	
 	public Integer getId() {
 		return id;
@@ -95,14 +111,13 @@ public class Selecao {
 		this.gols = gols;
 	}
 
-	public boolean isEstaEliminada() {
-		return estaEliminada;
+	public Grupo getGrupo() {
+		return grupo;
 	}
 
-	public void setEstaEliminada(boolean estaEliminada) {
-		this.estaEliminada = estaEliminada;
-	}
-	
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
+	}	
 	
 	
 }

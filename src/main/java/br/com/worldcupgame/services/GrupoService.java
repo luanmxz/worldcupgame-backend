@@ -10,7 +10,6 @@ import br.com.worldcupgame.model.Grupo;
 public class GrupoService {
 
 	public void atualizaGrupo(Optional<Grupo> grupo, Grupo grupoAtualizado) {
-		grupo.get().setIdSelecao(grupoAtualizado.getIdSelecao());
 		grupo.get().setNomeGrupo(grupoAtualizado.getNomeGrupo());
 	}
 }

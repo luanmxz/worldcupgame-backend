@@ -5,13 +5,14 @@ import br.com.worldcupgame.model.Selecao;
 public class SelecaoDTO {
 
 	private Integer id;
+	private String nomeSelecao;
 	private Integer pontos;
 	private Integer vitorias;
 	private Integer derrotas;
 	private Integer empates;
 	private Integer jogos;
 	private Integer gols;
-	private boolean estaEliminada;
+	private Integer grupoId;
 	
 	public SelecaoDTO() {}
 	
@@ -22,7 +23,19 @@ public class SelecaoDTO {
 		this.derrotas = selecao.getDerrotas();
 		this.empates = selecao.getEmpates();
 		this.jogos = selecao.getJogos();
-		this.estaEliminada = selecao.isEstaEliminada();
+	}
+
+	public SelecaoDTO(String nomeSelecao, Integer id, Integer pontos, Integer vitorias, Integer derrotas, Integer empates, Integer jogos,
+			Integer gols, Integer grupoId) {
+		super();
+		this.nomeSelecao = nomeSelecao;
+		this.pontos = pontos;
+		this.vitorias = vitorias;
+		this.derrotas = derrotas;
+		this.empates = empates;
+		this.jogos = jogos;
+		this.gols = gols;
+		this.grupoId = grupoId;
 	}
 
 	public Integer getId() {
@@ -81,13 +94,22 @@ public class SelecaoDTO {
 		this.gols = gols;
 	}
 
-	public boolean isEstaEliminada() {
-		return estaEliminada;
+	public Integer getGrupo() {
+		return grupoId;
 	}
 
-	public void setEstaEliminada(boolean estaEliminada) {
-		this.estaEliminada = estaEliminada;
+	public void setGrupo(Integer grupo) {
+		this.grupoId = grupo;
+	}
+
+	public String getNomeSelecao() {
+		return nomeSelecao;
+	}
+
+	public void setNomeSelecao(String nomeSelecao) {
+		this.nomeSelecao = nomeSelecao;
 	}
 	
 	
+
 }
