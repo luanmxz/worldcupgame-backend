@@ -89,7 +89,7 @@ public class ApostaController {
 	public ResponseEntity<?> deleteById(@PathVariable("id") Integer id){
 		Optional<Aposta> aposta = apostaRepository.findById(id);
 		if (aposta.isPresent()) {
-			String action = "Deletou a aposta de id: " + aposta.get().getId();
+			String action = "Deletou a aposta com id: " + aposta.get().getId();
 			logService.formataLog(action, aposta.get().getIdUser());
 			apostaRepository.deleteById(id);
 			return ResponseEntity.ok().build();
