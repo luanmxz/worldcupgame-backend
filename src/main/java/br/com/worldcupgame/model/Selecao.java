@@ -27,6 +27,8 @@ public class Selecao {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Grupo grupo;
 	
+	private String brasao;
+	
 	private Integer pontos;
 	private Integer vitorias;
 	private Integer derrotas;
@@ -119,5 +121,8 @@ public class Selecao {
 		this.grupo = grupo;
 	}	
 	
+	public String getBrasao() {
+		return this.brasao;
+	}
 	
 }

@@ -103,14 +103,23 @@ public class Usuario implements UserDetails {
 	public void setPassword(String password) {
 		this.senha = password;
 	}
-
+	
+	
 	@Override
 	public String getUsername() {
-		return this.nome;
+		return this.email;
 	}
 	
 	public void setUsername(String username) {
 		this.nome = username;
+	}
+	
+	public String getNome() {
+		return this.nome;
+	}
+	
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	@Override
@@ -136,6 +145,9 @@ public class Usuario implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
 	
+	public boolean isAdmin() {
+		if(this.getRoles().toArray().length > 1) return true;
+		return false;
+	}
 }

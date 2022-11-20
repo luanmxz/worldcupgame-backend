@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,7 +76,7 @@ public class ApostaController {
 	@PostMapping(path = "")
 	@Transactional
 	@ResponseStatus(HttpStatus.CREATED)
-	public Aposta save(@RequestBody ApostaDTO apostaDTO) {
+	public Aposta save(@RequestBody @Valid ApostaDTO apostaDTO) {
 		Aposta aposta = apostaService.formataAposta(apostaDTO);
 		String action = "Realizou uma aposta('ID':" + aposta.getId() + ")"
 				+ " no jogo de ID: " + aposta.getIdJogo().getId() + "!";

@@ -47,8 +47,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		http
 			.authorizeRequests()
 				//api/usuarios
-				.antMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("USER", "ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/usuarios/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/api/usuarios/**").permitAll()
+				.antMatchers(HttpMethod.PUT, "/api/usuarios/new-password").permitAll()
 				.antMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyRole("USER", "ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasAnyRole("ADMIN")
 				//api/selecoes
@@ -70,6 +71,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 				//oauth/token
 				//api/logs
 				.antMatchers("/api/logs/**").hasRole("ADMIN")
+				.antMatchers("/api/apostas/**").permitAll()
 				.anyRequest().permitAll();
 	}
 	

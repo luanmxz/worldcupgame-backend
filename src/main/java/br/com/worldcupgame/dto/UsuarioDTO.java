@@ -22,6 +22,8 @@ public class UsuarioDTO implements Serializable {
 	
 	private Integer pontos = 0;
 	
+	private boolean admin;
+	
 	Set<RoleDTO> roles = new HashSet<>();
 	
 	public UsuarioDTO() {}
@@ -34,8 +36,9 @@ public class UsuarioDTO implements Serializable {
 	
 	public UsuarioDTO(Usuario entity) {
 		id = entity.getId();
-		nome = entity.getUsername();
+		nome = entity.getNome();
 		email = entity.getEmail();
+		admin = entity.isAdmin();
 		entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));
 	}
 
@@ -73,5 +76,13 @@ public class UsuarioDTO implements Serializable {
 
 	public void setPontos(Integer pontos) {
 		this.pontos = pontos;
-	}	
+	}
+	
+	public boolean getAdmin() {
+		return this.admin;
+	}
+	
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
 }

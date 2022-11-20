@@ -12,4 +12,7 @@ public interface RecoveryPasswordTokenRepository extends JpaRepository<RecoveryP
 	@Query("SELECT t FROM RecoveryPasswordToken t JOIN t.userId u WHERE u.id = :usuarioId")
 	Optional<RecoveryPasswordToken> findByUserId(Long usuarioId);
 	
+	@Query("SELECT t FROM RecoveryPasswordToken t WHERE t.recoveryToken = :token")
+	Optional<RecoveryPasswordToken> findByToken(String token);
+	
 }

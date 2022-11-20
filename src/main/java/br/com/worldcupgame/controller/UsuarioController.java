@@ -29,6 +29,7 @@ import br.com.worldcupgame.dto.UsuarioRankingDTO;
 import br.com.worldcupgame.model.RecoveryPasswordToken;
 import br.com.worldcupgame.model.Role;
 import br.com.worldcupgame.model.Usuario;
+import br.com.worldcupgame.repository.RecoveryPasswordTokenRepository;
 import br.com.worldcupgame.repository.RoleRepository;
 import br.com.worldcupgame.repository.UsuarioRepository;
 import br.com.worldcupgame.services.LogService;
@@ -50,6 +51,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private RecoveryPasswordTokenService recoveryPasswordTokenService;
+	
+	@Autowired
+	private RecoveryPasswordTokenRepository recoveryRepository;
 	
 	@Autowired
 	private RoleRepository roleRepository;
@@ -96,13 +100,19 @@ public class UsuarioController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping(value= "{id}/new-password")
-	public ResponseEntity<Usuario> changePassword(@RequestBody NovaSenhaDTO novaSenha, @PathVariable("id") Long id ){
-		Optional<RecoveryPasswordToken> tokenInDataBase = recoveryPasswordTokenService.verifyToken(novaSenha.getToken(), id);
-		if (tokenInDataBase.isPresent()) {
-			Usuario usuario = usuarioService.changePassword(novaSenha.getNovaSenha(), id);
-			recoveryPasswordTokenService.deleteToken(tokenInDataBase.get());
-			return ResponseEntity.ok().body(usuario);
+	@PutMapping(value= "/new-password")
+	public ResponseEntity<Usuario> changePassword(@RequestBody NovaSenhaDTO novaSenha){
+		Optional<RecoveryPasswordToken> tokenUserId = recoveryRepository.findByToken(novaSenha.getToken());
+		if(tokenUserId.isPresent()) {
+			Usuario usuario = tokenUserId.get().getUserId();
+			System.out.println("usuario: " + usuario);
+			Optional<RecoveryPasswordToken> tokenInDataBase = recoveryPasswordTokenService.verifyToken(novaSenha.getToken(), usuario.getId());
+			if (tokenInDataBase.isPresent()) {
+				usuario = usuarioService.changePassword(novaSenha.getNovaSenha(), usuario.getId());
+				recoveryPasswordTokenService.deleteToken(tokenInDataBase.get());
+				return ResponseEntity.ok().body(usuario);
+			}
+			return ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.badRequest().build();
 	}
@@ -123,5 +133,11 @@ public class UsuarioController {
 		usuario.getRoles().remove(role);
 		usuarioRepository.save(usuario);
 		return ResponseEntity.ok().body(usuario);
+	}
+	
+	@GetMapping(value= "/find/{email}")
+	public Usuario findByEmail(@PathVariable("email") String email){
+		Usuario usuario = this.usuarioRepository.findByEmail(email);
+		return usuario;
 	}
 }

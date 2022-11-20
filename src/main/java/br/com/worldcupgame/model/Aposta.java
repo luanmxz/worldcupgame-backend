@@ -13,7 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,15 +32,18 @@ public class Aposta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private ResultadosEnum apostouEm;
 	
 	@Column(name= "esta_ativa")
 	private boolean estaAtiva;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "id_user")
 	private Usuario idUser;
+	
 	
 	@ManyToOne
 	@JoinColumn(name= "id_jogo")
@@ -52,11 +56,12 @@ public class Aposta {
 
 	public Aposta() {}
 	
-	public Aposta(ApostaDTO apostaDTO, Usuario idUser, Jogo idJogo) {
+	public Aposta(ApostaDTO apostaDTO, Usuario idUser, Jogo idJogo, LocalDateTime dataDaAposta) {
 		this.apostouEm = apostaDTO.getApostouEm();
 		this.estaAtiva = apostaDTO.isEstaAtiva();
 		this.idUser = idUser;
 		this.idJogo = idJogo;
+		this.dataDaAposta = dataDaAposta;
 	}
 	
 	public Aposta(ResultadosEnum apostouEm, boolean estaAtiva, Usuario idUser, Jogo idJogo) {
