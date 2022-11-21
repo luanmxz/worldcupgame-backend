@@ -52,11 +52,11 @@ public class SelecaoService {
 		selecaoA.setGols(selecaoA.getGols() + jogoDTO.getGolsA());
 		selecaoB.setGols(selecaoB.getGols() + jogoDTO.getGolsB());
 		
-		if(jogoDTO.getResultado().equals("A")) {
+		if(jogoDTO.getResultado().name() == "A") {
 			selecaoA.setPontos(selecaoA.getPontos() + 1);
 			selecaoA.setVitorias(selecaoA.getVitorias() + 1);
 			selecaoB.setDerrotas(selecaoB.getDerrotas() + 1);
-		} else if (jogoDTO.getResultado().equals("B")) {
+		} else if (jogoDTO.getResultado().name() == "B") {
 			selecaoB.setPontos(selecaoB.getPontos() + 1);
 			selecaoB.setVitorias(selecaoB.getVitorias() + 1);
 			selecaoA.setDerrotas(selecaoA.getDerrotas() + 1);

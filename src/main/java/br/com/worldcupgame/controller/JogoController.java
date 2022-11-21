@@ -25,6 +25,7 @@ import br.com.worldcupgame.repository.JogoRepository;
 import br.com.worldcupgame.repository.SelecaoRepository;
 import br.com.worldcupgame.services.JogoService;
 import br.com.worldcupgame.services.SelecaoService;
+import br.com.worldcupgame.services.UsuarioService;
 
 @RestController
 @RequestMapping(path = "/api/jogos")
@@ -38,6 +39,9 @@ public class JogoController {
 	
 	@Autowired
 	JogoService jogoService;
+	
+	@Autowired
+	UsuarioService usuarioService;
 	
 	@Autowired
 	SelecaoService selecaoService;
@@ -66,6 +70,7 @@ public class JogoController {
 		if (jogoIsValid) {
 			Jogo jogo = jogoRepository.findById(id).get();
 			this.selecaoService.atualizaEstatisticas(jogo, jogoDTO);
+			this.usuarioService.atualizaPontosUsuario(jogoDTO);
 			return ResponseEntity.ok().build();
 		}
 		return ResponseEntity.notFound().build();

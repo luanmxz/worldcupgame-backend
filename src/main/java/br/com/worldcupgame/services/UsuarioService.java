@@ -16,12 +16,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.worldcupgame.dto.AtualizaUsuarioDTO;
+import br.com.worldcupgame.dto.JogoDTO;
 import br.com.worldcupgame.dto.NovoUsuarioDTO;
 import br.com.worldcupgame.dto.RoleDTO;
 import br.com.worldcupgame.dto.UsuarioDTO;
 import br.com.worldcupgame.dto.UsuarioRankingDTO;
+import br.com.worldcupgame.model.Aposta;
+import br.com.worldcupgame.model.Jogo;
 import br.com.worldcupgame.model.Role;
 import br.com.worldcupgame.model.Usuario;
+import br.com.worldcupgame.repository.ApostaRepository;
 import br.com.worldcupgame.repository.RoleRepository;
 import br.com.worldcupgame.repository.UsuarioRepository;
 
@@ -40,6 +44,9 @@ public class UsuarioService implements UserDetailsService {
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private ApostaRepository apostaRepository;
 	
 	public List<UsuarioDTO> findAll() {
 		List<Usuario> list =  usuarioRepository.findAll();
@@ -124,6 +131,17 @@ public class UsuarioService implements UserDetailsService {
 		String action = "Usuario de ID: " + usuario.getId() + " alterou a senha";
 		logService.formataLog(action, usuario);
 		return usuario;
+	}
+	
+	public void atualizaPontosUsuario(JogoDTO jogoDTO) {
+		List<Aposta> apostas = apostaRepository.findAll();
+		
+		apostas.forEach((aposta) -> {
+			if(aposta.getApostouEm().equals(jogoDTO.getResultado())) {
+				Usuario usuario = aposta.getIdUser();
+				usuario.setPontos(usuario.getPontos() + 1);
+			}
+		});
 	}
 
 }
