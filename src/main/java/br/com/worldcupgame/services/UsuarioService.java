@@ -137,7 +137,8 @@ public class UsuarioService implements UserDetailsService {
 		List<Aposta> apostas = apostaRepository.findAll();
 		
 		apostas.forEach((aposta) -> {
-			if(aposta.getApostouEm().equals(jogoDTO.getResultado())) {
+			
+			if(aposta.getApostouEm().equals(jogoDTO.getResultado()) && aposta.getIdJogo().getId() == jogoDTO.getId()) {
 				Usuario usuario = aposta.getIdUser();
 				usuario.setPontos(usuario.getPontos() + 1);
 			}
