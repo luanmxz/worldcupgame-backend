@@ -1,17 +1,22 @@
 package br.com.worldcupgame.dto;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.worldcupgame.enums.ResultadosEnum;
 
 public class ApostaDTO {
 
 	private Integer id;
 	
+	@NotNull
 	private ResultadosEnum apostouEm;
 	
 	private boolean estaAtiva = true;
 	
+	@NotNull
 	private Long idUser;
 	
+	@NotNull
 	private int idJogo;
 
 	public Integer getId() {
