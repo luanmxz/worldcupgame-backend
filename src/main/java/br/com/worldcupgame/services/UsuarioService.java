@@ -55,7 +55,7 @@ public class UsuarioService implements UserDetailsService {
 	
 	public List<UsuarioRankingDTO> findAllForRanking() {
 		List<Usuario> list =  usuarioRepository.findAll();
-		return list.stream().map(x -> new UsuarioRankingDTO(x.getUsername(), x.getPontos())).collect(Collectors.toList());
+		return list.stream().map(x -> new UsuarioRankingDTO(x.getNome(), x.getPontos())).collect(Collectors.toList());
 	}
 
 	public UsuarioDTO findById(Long id) {
