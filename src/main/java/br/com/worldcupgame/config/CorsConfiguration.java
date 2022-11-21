@@ -14,7 +14,12 @@ public class CorsConfiguration implements WebMvcConfigurer {
             .allowedHeaders("*")
             .allowedHeaders("Access-Control-Allow-Headers: Origin, Content-Type, Authorization")
             .allowedHeaders("Access-Control-Allow-Origin: *");
-        registry.addMapping("http://localhost:4200/login")
+        registry.addMapping("https://wcg22.netlify.app/**")
+        	.allowedMethods("*")
+        	.allowedHeaders("*")
+        	.allowedHeaders("Access-Control-Allow-Headers: Origin, Content-Type, Authorization")
+            .allowedHeaders("Access-Control-Allow-Origin: *");
+        registry.addMapping("https://wcg22.netlify.app/#/login")
 	        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT")
 	        .allowedHeaders("Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS")
 	        .allowedHeaders("Access-Control-Allow-Headers: Origin, Content-Type, Authorization")
